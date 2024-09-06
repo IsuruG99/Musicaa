@@ -1,14 +1,14 @@
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 import { images } from '../../constants';
 
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 
-
+import { signIn } from '../../lib/appwrite';
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -17,8 +17,23 @@ const SignIn = () => {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const submit = () => {
+  const submit = async () => {
+    if (!form.email || !form.password) {
+      form.email = 'a@a.com'
+      form.password = 'aaaaaaaa'
+    }
 
+    setIsSubmitting(true);
+
+    try{
+      await signIn(form.email, form.password)
+      
+      router.replace('/home')
+    } catch (error){
+      Alert.alert('An error occurred. Please try again.',error.message)
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -53,7 +68,7 @@ const SignIn = () => {
 
           <View className="justify-center pt-5 flex-row-gap-2">
             <Text className="text-gray-100">Don't have an account?</Text>
-            <Link href="/sign-up" className="text-secondary">Sign Up</Link>
+            {/* <Link href="/sign-up" className="text-secondary">Sign Up</Link> */}
           </View>
         </View>
       </ScrollView>
