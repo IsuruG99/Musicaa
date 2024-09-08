@@ -46,29 +46,15 @@ const TabsLayout = () => {
                     )
                 }} />
             <Tabs.Screen
-                name="download"
+                name="playlists"
                 options={{
-                    title: "Download",
+                    title: "Playlists",
                     headerShown: false,
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon
                             icon={icons.upload}
                             color={color}
-                            name="Download"
-                            focused={focused}
-                        />
-                    )
-                }} />
-            <Tabs.Screen
-                name="profile"
-                options={{
-                    title: "Profile",
-                    headerShown: false,
-                    tabBarIcon: ({ color, focused }) => (
-                        <TabIcon
-                            icon={icons.profile}
-                            color={color}
-                            name="Profile"
+                            name="Playlists"
                             focused={focused}
                         />
                     )
