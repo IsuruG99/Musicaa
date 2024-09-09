@@ -1,11 +1,14 @@
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StatusBar } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import * as MediaLibrary from 'expo-media-library';
 
 import { MusicItem } from '../../components/MusicItem';
+import { useGlobalContext } from '../../context/GlobalProvider';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Home = () => {
+  const { setUri, uri } = useGlobalContext();
   const [musicFiles, setMusicFiles] = useState([]);
   const [hasPermission, setHasPermission] = useState(false);
 
@@ -43,22 +46,27 @@ const Home = () => {
   const musicItem = ({ item }) => (
     // trim the uri to show only the file name
     <TouchableOpacity
-    onPress={() => router.push(`/play?uri=${encodeURIComponent(item)}`)}
+      onPress={() => {
+        setUri(item);
+        router.push(`/play?uri=${encodeURIComponent(item)}`);
+      }}
     >
-      <Text
-        className="text-lg font-pregular p-3 text-white"
-      >{item.split('/').pop()}</Text>
+      <Text className="text-lg font-pregular p-3 text-white">{item.split('/').pop()}</Text>
     </TouchableOpacity>
   );
 
   return (
-    <View className="bg-primary w-full mt-8 items-center justify-center px-3">
-      <FlatList
-        data={musicFiles}
-        keyExtractor={(item) => item}
-        renderItem={musicItem}
-      />
-    </View>
+    <SafeAreaView className="bg-primary w-full h-full p-5">
+      <StatusBar barStyle="light-content" />
+      <View className="w-full h-full">
+        <Text className="text-3xl font-bold text-center text-white">Musicaa!</Text>
+        <FlatList
+          data={musicFiles}
+          keyExtractor={(item) => item}
+          renderItem={musicItem}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 

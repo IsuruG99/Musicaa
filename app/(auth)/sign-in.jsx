@@ -9,6 +9,7 @@ import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 
 import { signIn } from '../../lib/appwrite';
+import { setUser } from '../../context/GlobalProvider';
 
 const SignIn = () => {
   const [form, setForm] = useState({
@@ -26,11 +27,13 @@ const SignIn = () => {
     setIsSubmitting(true);
 
     try{
-      await signIn(form.email, form.password)
+      const result = await signIn(form.email, form.password);
+      setUser(result);
+      setIsLoggedIn(true);
       
-      router.replace('/home')
+      router.replace('/home');
     } catch (error){
-      Alert.alert('An error occurred. Please try again.',error.message)
+      Alert.alert('An error occurred. Please try again.',error.message);
     } finally {
       setIsSubmitting(false);
     }
