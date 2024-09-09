@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Audio } from 'expo-av';
-import { View, Button, ScrollView, Image, TouchableOpacity, Text } from 'react-native';
-import { useGlobalSearchParams } from 'expo-router';
+import { View, ScrollView, Image, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useGlobalContext } from '../../context/GlobalProvider';
@@ -11,6 +9,9 @@ function Play() {
     const { handlePlay, handlePause, handleStop, isLoggedIn, isLoading, uri } = useGlobalContext();
     const [status, setStatus] = useState('stopped');
 
+    // Return status for a text display, 
+    // made this elaborate cuz i thought i would want to make the text fancy 
+    // but i ended up not doing it
     useEffect(() => {
         return () => {
             switch (status) {
@@ -20,12 +21,16 @@ function Play() {
                     return "Paused";
                 case 'stopped':
                     return "Stopped";
-            }}}, [status]);
+            }
+        }
+    }, [status]);
 
+    // Return a loading text if the app is still loading
     if (isLoading) {
         return <View><Text>Loading...</Text></View>;
     }
 
+    // Should not happen, ever, but, just in case
     if (!isLoggedIn) {
         return <View><Text>Please log in to play music.</Text></View>;
     }
@@ -37,8 +42,8 @@ function Play() {
                     <Image source={images.logo} className="p-3 w-[100px] h-[100px] mx-auto" resizeMode='contain' />
                     <Text className="text-2xl text-center text-white mt-7">
                         {uri.trim().split('/').pop().replace(/\.(mp3|wav|webp)$/, '')}
-                    </Text>   
-                    <Text className="text-2xl text-center text-white mt-7">{status}</Text>   
+                    </Text>
+                    <Text className="text-2xl text-center text-white mt-7">{status}</Text>
                 </View>
                 <View
                     className="w-full flex-row items-center justify-center mt-5">

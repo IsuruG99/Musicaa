@@ -30,32 +30,32 @@
 //           <Text className="text-2xl text-center text-white mt-7">
 //             Sign in to your account
 //           </Text>
-//           <FormField 
+//           <FormField
 //             title="Username"
-//             value={form.username}          
+//             value={form.username}
 //             handleChangeText={(e) => setForm({ ...form, username: e })}
 //             otherStyles="mt-7"
 //           />
-//           <FormField 
+//           <FormField
 //             title="Email"
-//             value={form.email}          
+//             value={form.email}
 //             handleChangeText={(e) => setForm({ ...form, email: e })}
 //             otherStyles="mt-7"
-//             keyboardType="email-address"  
+//             keyboardType="email-address"
 //           />
-//           <FormField 
+//           <FormField
 //             title="Password"
-//             value={form.password}          
+//             value={form.password}
 //             handleChangeText={(e) => setForm({ ...form, password : e })}
 //             otherStyles="mt-7"
-//             keyboardType="password"  
+//             keyboardType="password"
 //           />
 
 //           <CustomButton
 //             title="Sign In"
 //             handlePress={submit}
 //             isLoading={isSubmitting}
-//             containerStyles="mt-7"          
+//             containerStyles="mt-7"
 //           />
 
 //           <View className="justify-center pt-5 flex-row-gap-2">

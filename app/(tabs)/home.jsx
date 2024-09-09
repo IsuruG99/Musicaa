@@ -2,16 +2,21 @@ import { View, Text, FlatList, TouchableOpacity, StatusBar } from 'react-native'
 import React, { useState, useEffect } from 'react';
 import * as MediaLibrary from 'expo-media-library';
 
-import { MusicItem } from '../../components/MusicItem';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Home = () => {
-  const { setUri, uri } = useGlobalContext();
+  const { setUri, isLoading } = useGlobalContext();
   const [musicFiles, setMusicFiles] = useState([]);
   const [hasPermission, setHasPermission] = useState(false);
 
+  // Return a loading text if the app is still loading
+  if (isLoading) {
+    return <View><Text>Loading...</Text></View>;
+  }
+
+  // Request storage permissions
   useEffect(() => {
     const requestPermissions = async () => {
       const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -21,6 +26,7 @@ const Home = () => {
     requestPermissions();
   }, []);
 
+  // Fetch a List of music files from device Storage, exlcuding Notifications
   useEffect(() => {
     const fetchMusicFiles = async () => {
       if (!hasPermission) return;
@@ -31,7 +37,6 @@ const Home = () => {
           first: 1000,
         });
         const musicFiles = media.assets.map(asset => asset.uri).filter(uri => !uri.includes('Notifications'));
-        //clear musicfiles first
         setMusicFiles([]);
         setMusicFiles(musicFiles);
         console.log('Number of music files detected:', musicFiles.length);
@@ -43,8 +48,9 @@ const Home = () => {
     fetchMusicFiles();
   }, [hasPermission]);
 
+  // Item of FlatList
   const musicItem = ({ item }) => (
-    // trim the uri to show only the file name
+    // Trim URI & set URI Globally
     <TouchableOpacity
       onPress={() => {
         setUri(item);

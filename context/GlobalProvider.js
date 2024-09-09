@@ -7,14 +7,15 @@ const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
 
 export function GlobalProvider({ children }) {
-    const [uri , setUri] = useState(null);
+    const [uri, setUri] = useState(null);
     const [isLoggedIn, setIsloggedIn] = useState(false);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const [status, setStatus] = useState('stopped'); // 'playing', 'paused', 'stopped'
+    const [status, setStatus] = useState('stopped');
     const [soundObject, setSoundObject] = useState(null);
 
+    // Check if user is logged in & set user state
     useEffect(() => {
         getCurrentUser()
             .then((res) => {
@@ -35,6 +36,7 @@ export function GlobalProvider({ children }) {
             });
     }, []);
 
+    // Cleanup Audio if program is stopped
     useEffect(() => {
         return () => {
             if (soundObject) {
@@ -43,9 +45,10 @@ export function GlobalProvider({ children }) {
         };
     }, [soundObject]);
 
+    // Load from uri & Play audio
     const handlePlay = async () => {
         try {
-            
+
             if (status === 'paused' && soundObject) {
                 setStatus('playing');
                 await soundObject.playAsync();
@@ -65,9 +68,10 @@ export function GlobalProvider({ children }) {
         }
     };
 
+    // Pause audio if playing
     const handlePause = async () => {
         setStatus('paused');
-        if (soundObject && status === 'playing') {   
+        if (soundObject && status === 'playing') {
             await soundObject.pauseAsync();
         }
         else {
@@ -76,32 +80,32 @@ export function GlobalProvider({ children }) {
         }
     };
 
+    // Stop audio & unload the object
     const handleStop = async () => {
         if (soundObject) {
-            
+
             await soundObject.stopAsync();
             await soundObject.unloadAsync();
-            
+
             setSoundObject(null);
         }
         setStatus('stopped');
     };
 
-    
-
     return (
-        <GlobalContext.Provider 
-        value={{ 
-            uri,
-            setUri,
-            isLoggedIn,
-            setIsloggedIn,
-            user,
-            setUser,
-            isLoading,
-            handlePlay, 
-            handlePause, 
-            handleStop }}>
+        <GlobalContext.Provider
+            value={{
+                uri,
+                setUri,
+                isLoggedIn,
+                setIsloggedIn,
+                user,
+                setUser,
+                isLoading,
+                handlePlay,
+                handlePause,
+                handleStop
+            }}>
             {children}
         </GlobalContext.Provider>
     );
